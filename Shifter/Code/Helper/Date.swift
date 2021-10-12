@@ -12,11 +12,11 @@ extension Date {
     }
 
     var firstDay: Date {
-        Calendar.current.dateComponents([.calendar, .year, .month], from: self).date!
+        Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: self)))!
     }
 
     var lastDay: Date {
-        Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.firstDay)!
+        Calendar.current.date(byAdding: DateComponents(month: 1, day: 0), to: self.firstDay)!
     }
 
     var startTime: Date {
@@ -25,5 +25,13 @@ extension Date {
 
     var endTime: Date {
         Calendar.current.date(byAdding: DateComponents(day: 1, second: -1), to: self.startTime)!
+    }
+    
+    func get(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
+        return calendar.dateComponents(Set(components), from: self)
+    }
+
+    func get(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
+        return calendar.component(component, from: self)
     }
 }

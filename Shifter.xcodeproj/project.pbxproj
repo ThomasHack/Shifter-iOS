@@ -19,6 +19,8 @@
 		5274778C26FC691C00A2D32D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5274778B26FC691C00A2D32D /* HomeView.swift */; };
 		5274778E26FC693F00A2D32D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5274778D26FC693F00A2D32D /* Settings.swift */; };
 		5274779026FC694900A2D32D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5274778F26FC694900A2D32D /* SettingsView.swift */; };
+		65FA1E26270459E600A085F4 /* CreateShift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FA1E25270459E600A085F4 /* CreateShift.swift */; };
+		65FA1E28270459F200A085F4 /* CreateShiftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FA1E27270459F200A085F4 /* CreateShiftView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		5274778B26FC691C00A2D32D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		5274778D26FC693F00A2D32D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		5274778F26FC694900A2D32D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		65FA1E25270459E600A085F4 /* CreateShift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShift.swift; sourceTree = "<group>"; };
+		65FA1E27270459F200A085F4 /* CreateShiftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShiftView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +131,8 @@
 			children = (
 				5274778926FC690800A2D32D /* Home.swift */,
 				5274778B26FC691C00A2D32D /* HomeView.swift */,
+				65FA1E25270459E600A085F4 /* CreateShift.swift */,
+				65FA1E27270459F200A085F4 /* CreateShiftView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -224,6 +230,8 @@
 				5274778A26FC690800A2D32D /* Home.swift in Sources */,
 				5274778C26FC691C00A2D32D /* HomeView.swift in Sources */,
 				52641AC226FCA293003C7E6A /* Date.swift in Sources */,
+				65FA1E28270459F200A085F4 /* CreateShiftView.swift in Sources */,
+				65FA1E26270459E600A085F4 /* CreateShift.swift in Sources */,
 				5274777626FC666200A2D32D /* ShifterApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
