@@ -8,7 +8,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct HomeView: View {
-    var store: Store<Home.State, Home.Action>
+    var store: Store<Home.HomeFeatureState, Home.Action>
     
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 5)
     
@@ -28,7 +28,7 @@ struct HomeView: View {
                             Button {
                                 viewStore.send(.fetchEvents)
                             } label: {
-                                Text(viewStore.selectedMonthReadable)
+                                Text(viewStore.events.selectedMonthReadable)
                                     .font(.system(size: 18, weight: .semibold))
                             }
                             
@@ -42,7 +42,7 @@ struct HomeView: View {
                         .padding(.vertical, 16)
                         
                         LazyVGrid(columns: columns) {
-                            ForEach(viewStore.days, id: \.self) { day in
+                            ForEach(viewStore.events.days, id: \.self) { day in
                                 VStack(spacing: 4) {
                                     ZStack {
                                         Circle()
@@ -69,7 +69,7 @@ struct HomeView: View {
                         }
                     }
                 }
-                .navigationTitle("Home")
+                .navigationTitle(viewStore.events.selectedMonthReadable)
                 .navigationBarItems(trailing: HStack {
                     Button {
                         viewStore.send(.toggleCreateShiftModal(toggle: true))
@@ -81,10 +81,11 @@ struct HomeView: View {
                     get: \.showCreateShiftModal,
                     send: Home.Action.toggleCreateShiftModal)
                 ) {
-                    CreateShiftView(store: CreateShift.previewStore)
+                    CreateShiftView(store: Main.store.createShift)
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 

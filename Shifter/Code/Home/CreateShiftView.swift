@@ -9,7 +9,9 @@ import ComposableArchitecture
 import SwiftUI
 
 struct CreateShiftView: View {
-    var store: Store<CreateShift.State, CreateShift.Action>
+    @Environment(\.presentationMode) var presentationMode
+
+    var store: Store<CreateShift.FeatureState, CreateShift.Action>
     
     var body: some View {
         NavigationView {
@@ -17,11 +19,16 @@ struct CreateShiftView: View {
                 ScrollView {
                     VStack {
                         TextField("Title", text: viewStore.binding(get: \.title, send: CreateShift.Action.updateTitle))
+
+                        DatePicker("Start time", selection: viewStore.binding(get: \.startDate, send: CreateShift.Action.updateStartDate), displayedComponents: .hourAndMinute)
+
+                        DatePicker("End time", selection: viewStore.binding(get: \.endDate, send: CreateShift.Action.updateEndDate), displayedComponents: .hourAndMinute)
                     }
                     .padding()
                 }
                 .navigationBarItems(trailing: HStack {
                     Button {
+                        presentationMode.wrappedValue.dismiss()
                         viewStore.send(.save)
                     } label: {
                         Text("Save")
@@ -30,6 +37,7 @@ struct CreateShiftView: View {
             }
             .navigationTitle("Create new Shift")
         }
+        .navigationViewStyle(.stack)
     }
 }
 

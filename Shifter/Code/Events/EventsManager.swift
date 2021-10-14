@@ -9,34 +9,9 @@ import Foundation
 import EventKit
 import CoreMedia
 
-enum EventsManagerError: Error {
-    case noAccess
-    case notDetermined
-    case restricted
-    case denied
-    case unknown
-
-    var localizedDescription: String {
-        switch self {
-        case .noAccess:
-            return "No access"
-        case .notDetermined:
-            return "Not determined"
-        case .restricted:
-            return "Restricted"
-        case .denied:
-            return "Denied"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
 public class EventsManager: NSObject {
 
     public private(set) var eventStore = EKEventStore()
-
-    public var events = [EKEvent]()
 
     override init() {}
 
@@ -74,9 +49,25 @@ public class EventsManager: NSObject {
         .eraseToAnyPublisher()
     }
 
+    func fetchCalendars() -> AnyPublisher<[EKCalendar], EventsManagerError> {
+        Future { promise in
+            let calendars = self.eventStore.calendars(for: .event)
+            promise(.success(calendars))
+        }
+        .eraseToAnyPublisher()
+    }
+
     func fetchEvents(from: Date, to: Date) -> AnyPublisher<[EKEvent], EventsManagerError> {
         Future { promise in
             let events = self.fetchEvents(startDate: from, endDate: to)
+            promise(.success(events))
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func fetchEvents(from: Date, to: Date, calendarId: String) -> AnyPublisher<[EKEvent], EventsManagerError> {
+        Future { promise in
+            let events = self.fetchEvents(startDate: from, endDate: to, filterCalendarIDs: [calendarId])
             promise(.success(events))
         }
         .eraseToAnyPublisher()
@@ -101,7 +92,6 @@ public class EventsManager: NSObject {
         }
         let predicate = self.eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
         let events = self.eventStore.events(matching: predicate)
-        self.events = events
         return events
     }
 }

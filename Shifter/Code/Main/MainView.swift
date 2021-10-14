@@ -13,13 +13,13 @@ struct MainView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             TabView {
-                HomeView(store: Home.previewStore)
+                HomeView(store: Main.store.home)
                     .tabItem {
                         Image(systemName: "house.fill")
                         Text("Home")
                     }
 
-                SettingsView(store: Settings.previewStore)
+                SettingsView(store: Main.store.settings)
                     .tabItem {
                         Image(systemName: "gear")
                         Text("Settings")
