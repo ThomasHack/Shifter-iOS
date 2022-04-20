@@ -72,11 +72,19 @@ public class EventsManager: NSObject {
         }
         .eraseToAnyPublisher()
     }
+    
+    func addEvent(title: String, startDate: Date, endDate: Date, calendarId: String) -> AnyPublisher<Bool, EventsManagerError> {
+        Future { promise in
+            self.saveEvent(title: title, startDate: startDate, endDate: endDate, calendarId: calendarId)
+            promise(.success(true))
+        }
+        .eraseToAnyPublisher()
+    }
 
     // MARK: - Private methods
 
     private func requestAccess(completion: @escaping EKEventStoreRequestAccessCompletionHandler) {
-        eventStore.requestAccess(to: EKEntityType.event) { (accessGranted, error) in
+        self.eventStore.requestAccess(to: EKEntityType.event) { (accessGranted, error) in
             completion(accessGranted, error)
         }
     }
@@ -93,5 +101,21 @@ public class EventsManager: NSObject {
         let predicate = self.eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
         let events = self.eventStore.events(matching: predicate)
         return events
+    }
+    
+    private func saveEvent(title: String, startDate: Date, endDate: Date, calendarId: String) {
+        guard let calendar = self.eventStore.calendar(withIdentifier: calendarId) else { return }
+        
+        let event = EKEvent(eventStore: self.eventStore)
+        event.title = title
+        event.startDate = startDate
+        event.endDate = endDate
+        event.calendar = calendar
+        
+        do {
+            try self.eventStore.save(event, span: .thisEvent)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 }

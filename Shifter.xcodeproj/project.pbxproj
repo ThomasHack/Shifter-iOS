@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52198C9C281006B300A6460B /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52198C9B281006B300A6460B /* CalendarView.swift */; };
+		52198C9E2810096A00A6460B /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52198C9D2810096A00A6460B /* WeekView.swift */; };
+		52198CA02810097400A6460B /* MonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52198C9F2810097400A6460B /* MonthView.swift */; };
+		52198CA22810097D00A6460B /* DayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52198CA12810097D00A6460B /* DayView.swift */; };
+		52198CA4281009A800A6460B /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52198CA3281009A800A6460B /* DateFormatter.swift */; };
+		52198CA6281009C800A6460B /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52198CA5281009C800A6460B /* Calendar.swift */; };
 		5234CB222715DC3C00789CC1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5234CB212715DC3C00789CC1 /* Events.swift */; };
 		5234CB242715DF3600789CC1 /* Home+HomeFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5234CB232715DF3600789CC1 /* Home+HomeFeature.swift */; };
 		5236F9D12716C53F00C3871F /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5236F9D02716C53F00C3871F /* Shared.swift */; };
@@ -33,6 +39,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		52198C9B281006B300A6460B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		52198C9D2810096A00A6460B /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
+		52198C9F2810097400A6460B /* MonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthView.swift; sourceTree = "<group>"; };
+		52198CA12810097D00A6460B /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
+		52198CA3281009A800A6460B /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		52198CA5281009C800A6460B /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		5234CB212715DC3C00789CC1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		5234CB232715DF3600789CC1 /* Home+HomeFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Home+HomeFeature.swift"; sourceTree = "<group>"; };
 		5236F9D02716C53F00C3871F /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
@@ -71,10 +83,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		52198C98280FF0C400A6460B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				52198C9B281006B300A6460B /* CalendarView.swift */,
+				52198CA12810097D00A6460B /* DayView.swift */,
+				52198C9D2810096A00A6460B /* WeekView.swift */,
+				52198C9F2810097400A6460B /* MonthView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		52641AC026FCA286003C7E6A /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				52641AC126FCA293003C7E6A /* Date.swift */,
+				52198CA3281009A800A6460B /* DateFormatter.swift */,
+				52198CA5281009C800A6460B /* Calendar.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -149,6 +174,7 @@
 		5274778726FC68D000A2D32D /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				52198C98280FF0C400A6460B /* Views */,
 				5274778926FC690800A2D32D /* Home.swift */,
 				5234CB232715DF3600789CC1 /* Home+HomeFeature.swift */,
 				5274778B26FC691C00A2D32D /* HomeView.swift */,
@@ -274,11 +300,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				5236F9D12716C53F00C3871F /* Shared.swift in Sources */,
+				52198CA22810097D00A6460B /* DayView.swift in Sources */,
 				5270CCE12716BD2A003CCC86 /* Settings+Feature.swift in Sources */,
+				52198CA4281009A800A6460B /* DateFormatter.swift in Sources */,
 				5286830B27183A17009E7794 /* CreateShift+Feature.swift in Sources */,
 				5234CB222715DC3C00789CC1 /* Events.swift in Sources */,
 				52641ABF26FC87E5003C7E6A /* EventsManager.swift in Sources */,
+				52198C9C281006B300A6460B /* CalendarView.swift in Sources */,
 				5274779026FC694900A2D32D /* SettingsView.swift in Sources */,
+				52198CA6281009C800A6460B /* Calendar.swift in Sources */,
 				5286831027183B73009E7794 /* Time.swift in Sources */,
 				5274778E26FC693F00A2D32D /* Settings.swift in Sources */,
 				5274778426FC682300A2D32D /* Main.swift in Sources */,
@@ -287,8 +317,10 @@
 				5286830D27183B65009E7794 /* ShiftTemplate.swift in Sources */,
 				5274778C26FC691C00A2D32D /* HomeView.swift in Sources */,
 				5286831227183B93009E7794 /* EventsManagerError.swift in Sources */,
+				52198C9E2810096A00A6460B /* WeekView.swift in Sources */,
 				5234CB242715DF3600789CC1 /* Home+HomeFeature.swift in Sources */,
 				52641AC226FCA293003C7E6A /* Date.swift in Sources */,
+				52198CA02810097400A6460B /* MonthView.swift in Sources */,
 				65FA1E28270459F200A085F4 /* CreateShiftView.swift in Sources */,
 				65FA1E26270459E600A085F4 /* CreateShift.swift in Sources */,
 				5286831427183BAF009E7794 /* Day.swift in Sources */,

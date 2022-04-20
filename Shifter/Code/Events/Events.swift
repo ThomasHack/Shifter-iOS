@@ -10,42 +10,45 @@ import EventKit
 
 enum Events {
     struct State: Equatable {
-
+        var calendar = Calendar.current
         var calendars: [EKCalendar] = []
-
         var events: [EKEvent] = []
+        
+        var year: DateInterval {
+            calendar.dateInterval(of: .month, for: Date())!
+        }
 
-        var selectedMonth: Int = Calendar.current.dateComponents([.month], from: Date()).month!
+        var months: [Date] {
+            calendar.generateDates(
+                inside: year,
+                matching: DateComponents(day: 1, hour: 0, minute: 0, second: 0)
+            )
+        }
 
+        var weeks: [Date] {
+            guard let monthInterval = calendar.dateInterval(of: .month, for: selectedMonth) else { return [] }
+            return calendar.generateDates(
+                inside: monthInterval,
+                matching: DateComponents(hour: 0, minute: 0, second: 0, weekday: calendar.firstWeekday)
+            )
+        }
+        
+        var localizedWeekdays: [String] {
+            let weekDays = Calendar.current.shortWeekdaySymbols
+            let sortedWeekDays = Array(weekDays[Calendar.current.firstWeekday - 1 ..< Calendar.current.shortWeekdaySymbols.count] + weekDays[0 ..< Calendar.current.firstWeekday - 1])
+            return sortedWeekDays
+        }
+
+        var selectedMonth: Date = Date()
         var selectedMonthReadable: String {
-            let date = Calendar.current.date(from: DateComponents(year: Date().currentYear, month: selectedMonth, day: 1))!
-            let formatter = DateFormatter()
-            formatter.dateFormat = "LLLL"
-            return formatter.string(from: date)
+            DateFormatter.month.string(from: selectedMonth)
         }
-
-        var days: [Day] {
-            let dateComponents = DateComponents(year: Date().currentYear, month: selectedMonth)
-            let calendar = Calendar.current
-            let date = calendar.date(from: dateComponents)!
-            let range = calendar.range(of: .day, in: .month, for: date)!
-
-            return range.map { day in
-                let date = calendar.date(from: DateComponents(year: Date().currentYear, month: selectedMonth, day: day))!
-                let currentEvents = events.filter { event in
-                    let eventStartDay = event.startDate.get(.day)
-                    let eventEndDay = event.endDate.get(.day)
-                    return day == eventStartDay || day == eventEndDay
-                }
-                return Day(dayDate: day, startDate: date, endDate: date.endTime, events: currentEvents)
-            }
-        }
-
     }
 
     enum Action {
         case previousMonth
         case nextMonth
+        case resetMonth
         case requestAccess
         case requestAccessResponse(Result<Bool, EventsManagerError>)
         case getAuthorizationStatus
@@ -55,6 +58,8 @@ enum Events {
         case fetchEvents
         case fetchEventsForCalendar(String)
         case fetchEventsResponse(Result<[EKEvent], EventsManagerError>)
+        case addEvent(String, Date, Date, String)
+        case addEventResponse(Result<Bool, EventsManagerError>)
     }
 
     typealias Environment = Main.Environment
@@ -62,11 +67,19 @@ enum Events {
     static let reducer = Reducer<State, Action, Environment> { state, action, environment in
         switch action {
         case .previousMonth:
-            state.selectedMonth -= 1
+            if let date = Calendar.current.date(byAdding: .month, value: -1, to: state.selectedMonth) {
+                state.selectedMonth = date
+            }
             return Effect(value: .fetchEvents)
 
         case .nextMonth:
-            state.selectedMonth += 1
+            if let date = Calendar.current.date(byAdding: .month, value: 1, to: state.selectedMonth) {
+                state.selectedMonth = date
+            }
+            return Effect(value: .fetchEvents)
+            
+        case .resetMonth:
+            state.selectedMonth = Date()
             return Effect(value: .fetchEvents)
 
         case .requestAccess:
@@ -108,18 +121,16 @@ enum Events {
             return .none
 
         case .fetchEvents:
-            let date = Calendar.current.date(from: DateComponents(year: Date().currentYear, month: state.selectedMonth, day: 1))!
-            let from = date.firstDay
-            let to = date.lastDay
+            let from = state.selectedMonth.firstDay
+            let to = state.selectedMonth.lastDay
             return environment.eventsManager.fetchEvents(from: from, to: to)
                 .receive(on: environment.mainQueue)
                 .catchToEffect()
                 .map(Action.fetchEventsResponse)
 
         case .fetchEventsForCalendar(let calendarId):
-            let date = Calendar.current.date(from: DateComponents(year: Date().currentYear, month: state.selectedMonth, day: 1))!
-            let from = date.firstDay
-            let to = date.lastDay
+            let from = state.selectedMonth.firstDay
+            let to = state.selectedMonth.lastDay
             return environment.eventsManager.fetchEvents(from: from, to: to, calendarId: calendarId)
                 .receive(on: environment.mainQueue)
                 .catchToEffect()
@@ -133,6 +144,15 @@ enum Events {
                 print(error.localizedDescription)
             }
             return .none
+            
+        case let .addEvent(title, startDate, endDate, calendarId):
+            return environment.eventsManager.addEvent(title: title, startDate: startDate, endDate: endDate, calendarId: calendarId)
+                .receive(on: environment.mainQueue)
+                .catchToEffect()
+                .map(Action.addEventResponse)
+            
+        case .addEventResponse:
+            return Effect(value: .fetchEvents)
         }
         return .none
     }
