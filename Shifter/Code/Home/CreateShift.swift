@@ -9,12 +9,11 @@ import ComposableArchitecture
 import Foundation
 
 enum CreateShift {
-    
     struct State: Equatable {
         var title = ""
         var now = Date()
-        var startDate: Date = Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: Date())!
-        var endDate: Date = Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: Date())!
+        var startDate = CreateShift.startDate
+        var endDate = CreateShift.endDate
 
         var template = emptyTemplate
     }
@@ -29,17 +28,23 @@ enum CreateShift {
 
         case shared(Shared.Action)
     }
+    
+    static var startDate = Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: Date())!
+    static var endDate = Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: Date())!
 
     static let emptyTemplate = ShiftTemplate(
         title: "",
-        startTime: Time(hours: 12, minutes: 00),
-        endTime: Time(hours: 13, minutes: 00)
+        startTime: Time(hours: Calendar.current.component(.hour, from: startDate), minutes: 00),
+        endTime: Time(hours: Calendar.current.component(.hour, from: endDate), minutes: 00)
     )
     
     static let reducer = Reducer<FeatureState, Action, Environment>.combine(
         Reducer { state, action, environment in
             switch action {
             case .save:
+                state.title = ""
+                state.startDate = CreateShift.startDate
+                state.endDate = CreateShift.endDate
                 
                 return Effect(value: .shared(.saveShifTemplate(state.template)))
 

@@ -72,7 +72,7 @@ enum Events {
                 .map(Action.requestAccessResponse)
 
         case .requestAccessResponse:
-            break
+            return Effect(value: .fetchCalendars)
 
         case .getAuthorizationStatus:
             return environment.eventsManager.getStatus()
@@ -86,6 +86,7 @@ enum Events {
                 print("getAuthorizationStatus: success")
             case .failure(let error):
                 print(error.localizedDescription)
+                return Effect(value: .requestAccess)
             }
 
         case .fetchCalendars:

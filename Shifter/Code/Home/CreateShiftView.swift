@@ -24,6 +24,7 @@ struct CreateShiftView: View {
 
                     DatePicker("End time", selection: viewStore.binding(get: \.endDate, send: CreateShift.Action.updateEndDate), displayedComponents: .hourAndMinute)
                 }
+                .navigationTitle("Create new Shift")
                 .navigationBarItems(trailing: HStack {
                     Button {
                         presentationMode.wrappedValue.dismiss()
@@ -34,7 +35,13 @@ struct CreateShiftView: View {
                     .disabled(viewStore.title.count < 3)
                 })
             }
-            .navigationTitle("Create new Shift")
+            .navigationBarItems(leading: HStack {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Cancel")
+                }
+            })
         }
         .navigationViewStyle(.stack)
     }
