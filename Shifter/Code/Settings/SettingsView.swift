@@ -8,69 +8,88 @@ import ComposableArchitecture
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.presentationMode) private var presentationMode
+
     var store: Store<Settings.FeatureState, Settings.Action>
 
+    
+    init(store: Store<Settings.FeatureState, Settings.Action>) {
+        self.store = store
+        UITableView.appearance().backgroundColor = .clear // <-- here
+    }
+    
     var body: some View {
         NavigationView {
             WithViewStore(self.store) { viewStore in
-                VStack {
-                    HStack {
-                        Button {
-                            viewStore.send(.requestAccess)
-                        } label: {
-                            Text("Request Access")
-                        }
-
-                        Button {
-                            viewStore.send(.getAuthorizationStatus)
-                        } label: {
-                            Text("Get Status")
-                        }
-                    }
-
-                    HStack {
-                        Button {
-                            viewStore.send(.fetchCalendars)
-                        } label: {
-                            Text("Fetch Calendars")
-                        }
-
-                        Button {
-                            viewStore.send(.test)
-                        } label: {
-                            Text("Test")
-                        }
-                    }
+                ZStack {
+                    Color("background")
+                        .edgesIgnoringSafeArea(.all)
 
                     VStack {
-                        ForEach(viewStore.events.calendars, id: \.self) { calendar in
-                            Button {
-                                viewStore.send(.selectCalendar(calendar))
-                            } label: {
-                                Text("\(calendar.title)")
+                        List {
+                            Section(header: Text("Calendars")) {
+                                ForEach(viewStore.events.calendars, id: \.self) { calendar in
+                                    Button {
+                                        viewStore.send(.selectCalendar(calendar))
+                                    } label: {
+                                        HStack {
+                                            Circle()
+                                                .frame(width: 6, height: 6)
+                                                .foregroundColor(Color(calendar.cgColor))
+                                            Text("\(calendar.title)")
+                                                .foregroundColor(Color(.label))
+                                            Spacer()
+                                            if let identifier = viewStore.shared.calendarId, calendar.calendarIdentifier == identifier {
+                                                Image(systemName: "checkmark")
+                                            }
+                                        }
+                                        
+                                    }
+                                }
                             }
-                        }
-                    }
-                    .background(Color(.secondarySystemBackground))
-                    .padding()
-
-                    Text(viewStore.shared.calendarId ?? "-")
-
-                    VStack {
-                        ForEach(viewStore.shared.shiftTemplates, id: \.self) { template in
-                            HStack {
-                                Text("\(template.title) | \(template.startTime.hours):\(template.startTime.minutes) - \(template.endTime.hours):\(template.endTime.minutes) ")
+                            Section(header: Text("Schedules")) {
+                                ForEach(viewStore.shared.shiftTemplates, id: \.self) { template in
+                                    HStack {
+                                        Text(template.title)
+                                        Spacer()
+                                        Text("\(String(format: "%02d", template.startTime.hours)):\(String(format: "%02d", template.startTime.minutes)) - \(String(format: "%02d", template.endTime.hours)):\(String(format: "%02d", template.endTime.minutes))")
+                                        Button {
+                                            viewStore.send(.deleteTemplate(template))
+                                        } label: {
+                                            Image(systemName: "trash")
+                                                .foregroundColor(Color.red)
+                                        }
+                                        .padding(.leading, 8)
+                                    }
+                                }
                                 Button {
-                                    viewStore.send(.deleteTemplate(template))
+                                    viewStore.send(.toggleCreateShiftModal(toggle: true))
                                 } label: {
-                                    Image(systemName: "trash")
+                                    HStack {
+                                        Image(systemName: "plus")
+                                        Text("Add new schedule")
+                                        Spacer()
+                                    }
                                 }
                             }
                         }
+                        .listStyle(.insetGrouped)
+                        
+                        Spacer()
                     }
-
-                    Spacer()
-
+                }
+                .navigationBarItems(trailing: HStack {
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Text("Close")
+                    }
+                })
+                .sheet(isPresented: viewStore.binding(
+                    get: \.showCreateShiftModal,
+                    send: Settings.Action.toggleCreateShiftModal)
+                ) {
+                    CreateShiftView(store: Main.store.createShift)
                 }
             }
             .navigationTitle("Settings")

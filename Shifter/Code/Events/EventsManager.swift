@@ -80,6 +80,14 @@ public class EventsManager: NSObject {
         }
         .eraseToAnyPublisher()
     }
+    
+    func removeEvent(event: EKEvent) -> AnyPublisher<Bool, EventsManagerError> {
+        Future { promise in
+            self.deleteEvent(event: event)
+            promise(.success(true))
+        }
+        .eraseToAnyPublisher()
+    }
 
     // MARK: - Private methods
 
@@ -114,6 +122,14 @@ public class EventsManager: NSObject {
         
         do {
             try self.eventStore.save(event, span: .thisEvent)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    private func deleteEvent(event: EKEvent) {
+        do {
+            try self.eventStore.remove(event, span: .thisEvent)
         } catch {
             print(error.localizedDescription)
         }

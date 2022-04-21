@@ -10,16 +10,13 @@ import EventKit
 
 enum Settings {
     struct State: Equatable {
-        var inc = 1
+        var showCreateShiftModal = false
     }
 
     enum Action {
-        case requestAccess
-        case getAuthorizationStatus
-        case fetchCalendars
         case selectCalendar(EKCalendar)
         case deleteTemplate(ShiftTemplate)
-        case test
+        case toggleCreateShiftModal(toggle: Bool)
 
         case events(Events.Action)
         case shared(Shared.Action)
@@ -30,34 +27,18 @@ enum Settings {
     static let reducer = Reducer<FeatureState, Action, Environment>.combine(
         Reducer { state, action, environment in
             switch action {
-            case .requestAccess:
-                return Effect(value: .events(.requestAccess))
-
-            case .getAuthorizationStatus:
-                return Effect(value: .events(.getAuthorizationStatus))
-
-            case .fetchCalendars:
-                return Effect(value: .events(.fetchCalendars))
-
             case .selectCalendar(let calendar):
                 return Effect(value: .shared(.selectCalendar(calendar.calendarIdentifier)))
 
             case .deleteTemplate(let template):
                 return Effect(value: .shared(.deleteShiftTemplate(template)))
+                
+            case .toggleCreateShiftModal(toggle: let toggle):
+                state.showCreateShiftModal = toggle
+                return .none
 
             case .events, .shared:
                 break
-
-            case .test:
-                let title = "Test #\(state.inc)"
-                state.inc += 1
-                return Effect(value: .shared(.saveShifTemplate(
-                    ShiftTemplate(
-                        title: title,
-                        startTime: Time(hours: 1, minutes: 0),
-                        endTime: Time(hours: 2, minutes: 0)
-                    )
-                )))
             }
             return .none
         },

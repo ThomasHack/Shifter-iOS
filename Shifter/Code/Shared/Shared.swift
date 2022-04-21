@@ -48,7 +48,6 @@ enum Shared {
 
         case .saveShifTemplate(let template):
             state.shiftTemplates.append(template)
-            print(state.shiftTemplates)
 
         case .deleteShiftTemplate(let template):
             if let index = state.shiftTemplates.firstIndex(of: template) {

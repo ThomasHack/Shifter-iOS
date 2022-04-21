@@ -16,15 +16,13 @@ struct CreateShiftView: View {
     var body: some View {
         NavigationView {
             WithViewStore(self.store) { viewStore in
-                ScrollView {
-                    VStack {
-                        TextField("Title", text: viewStore.binding(get: \.title, send: CreateShift.Action.updateTitle))
+                List {
+                    TextField("Title", text: viewStore.binding(get: \.title, send: CreateShift.Action.updateTitle))
+                        .disableAutocorrection(true)
 
-                        DatePicker("Start time", selection: viewStore.binding(get: \.startDate, send: CreateShift.Action.updateStartDate), displayedComponents: .hourAndMinute)
+                    DatePicker("Start time", selection: viewStore.binding(get: \.startDate, send: CreateShift.Action.updateStartDate), displayedComponents: .hourAndMinute)
 
-                        DatePicker("End time", selection: viewStore.binding(get: \.endDate, send: CreateShift.Action.updateEndDate), displayedComponents: .hourAndMinute)
-                    }
-                    .padding()
+                    DatePicker("End time", selection: viewStore.binding(get: \.endDate, send: CreateShift.Action.updateEndDate), displayedComponents: .hourAndMinute)
                 }
                 .navigationBarItems(trailing: HStack {
                     Button {
@@ -33,6 +31,7 @@ struct CreateShiftView: View {
                     } label: {
                         Text("Save")
                     }
+                    .disabled(viewStore.title.count < 3)
                 })
             }
             .navigationTitle("Create new Shift")

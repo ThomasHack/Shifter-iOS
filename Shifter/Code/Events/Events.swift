@@ -14,25 +14,6 @@ enum Events {
         var calendars: [EKCalendar] = []
         var events: [EKEvent] = []
         
-        var year: DateInterval {
-            calendar.dateInterval(of: .month, for: Date())!
-        }
-
-        var months: [Date] {
-            calendar.generateDates(
-                inside: year,
-                matching: DateComponents(day: 1, hour: 0, minute: 0, second: 0)
-            )
-        }
-
-        var weeks: [Date] {
-            guard let monthInterval = calendar.dateInterval(of: .month, for: selectedMonth) else { return [] }
-            return calendar.generateDates(
-                inside: monthInterval,
-                matching: DateComponents(hour: 0, minute: 0, second: 0, weekday: calendar.firstWeekday)
-            )
-        }
-        
         var localizedWeekdays: [String] {
             let weekDays = Calendar.current.shortWeekdaySymbols
             let sortedWeekDays = Array(weekDays[Calendar.current.firstWeekday - 1 ..< Calendar.current.shortWeekdaySymbols.count] + weekDays[0 ..< Calendar.current.firstWeekday - 1])
@@ -60,6 +41,8 @@ enum Events {
         case fetchEventsResponse(Result<[EKEvent], EventsManagerError>)
         case addEvent(String, Date, Date, String)
         case addEventResponse(Result<Bool, EventsManagerError>)
+        case removeEvent(EKEvent)
+        case removeEventResponse(Result<Bool, EventsManagerError>)
     }
 
     typealias Environment = Main.Environment
@@ -121,12 +104,15 @@ enum Events {
             return .none
 
         case .fetchEvents:
-            let from = state.selectedMonth.firstDay
-            let to = state.selectedMonth.lastDay
-            return environment.eventsManager.fetchEvents(from: from, to: to)
-                .receive(on: environment.mainQueue)
-                .catchToEffect()
-                .map(Action.fetchEventsResponse)
+            let year = Calendar.current.component(.year, from: Date())
+            if let from = Calendar.current.date(from: DateComponents(year: year)),
+               let to = Calendar.current.date(from: DateComponents(year: year + 1, day: 0)) {
+                return environment.eventsManager.fetchEvents(from: from, to: to)
+                    .receive(on: environment.mainQueue)
+                    .catchToEffect()
+                    .map(Action.fetchEventsResponse)
+            }
+            return .none
 
         case .fetchEventsForCalendar(let calendarId):
             let from = state.selectedMonth.firstDay
@@ -150,8 +136,17 @@ enum Events {
                 .receive(on: environment.mainQueue)
                 .catchToEffect()
                 .map(Action.addEventResponse)
-            
+
         case .addEventResponse:
+            return Effect(value: .fetchEvents)
+
+        case let .removeEvent(event):
+            return environment.eventsManager.removeEvent(event: event)
+                .receive(on: environment.mainQueue)
+                .catchToEffect()
+                .map(Action.removeEventResponse)
+                    
+        case .removeEventResponse:
             return Effect(value: .fetchEvents)
         }
         return .none

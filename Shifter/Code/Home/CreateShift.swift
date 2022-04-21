@@ -12,8 +12,9 @@ enum CreateShift {
     
     struct State: Equatable {
         var title = ""
-        var startDate: Date = Date()
-        var endDate: Date = Calendar.current.date(byAdding: DateComponents(hour: 1), to: Date())!
+        var now = Date()
+        var startDate: Date = Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: Date())!
+        var endDate: Date = Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: Date())!
 
         var template = emptyTemplate
     }
@@ -31,10 +32,8 @@ enum CreateShift {
 
     static let emptyTemplate = ShiftTemplate(
         title: "",
-        startTime: Time(hours: Date().get(.hour), minutes: Date().get(.minute)),
-        endTime: Time(
-            hours: Calendar.current.date(byAdding: DateComponents(hour: 1), to: Date())!.get(.hour),
-            minutes: Calendar.current.date(byAdding: DateComponents(hour: 1), to: Date())!.get(.minute))
+        startTime: Time(hours: 12, minutes: 00),
+        endTime: Time(hours: 13, minutes: 00)
     )
     
     static let reducer = Reducer<FeatureState, Action, Environment>.combine(

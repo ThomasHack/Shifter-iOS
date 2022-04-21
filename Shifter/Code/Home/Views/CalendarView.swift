@@ -9,48 +9,39 @@ import ComposableArchitecture
 import SwiftUI
 
 struct CalendarView: View {
+    @Environment(\.calendar) var calendar
+    
+    @State private var selection = Calendar.current.component(.month, from: Date()) - 1
+
     var store: Store<Home.HomeFeatureState, Home.Action>
 
+    var year: DateInterval {
+        calendar.dateInterval(of: .year, for: Date())!
+    }
+
+    var months: [Date] {
+        calendar.generateDates(
+            inside: year,
+            matching: DateComponents(day: 1, hour: 0, minute: 0, second: 0)
+        )
+    }
+    
     var body: some View {
-        WithViewStore(store) { viewStore in
-            HStack(spacing: 16) {
-                Button {
-                    viewStore.send(.previousMonth)
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 16, weight: .semibold, design: .default))
+        WithViewStore(store) { viewStore in            
+            GeometryReader { geometry in
+                TabView(selection: viewStore.binding(get: \.selectedIndex, send: Home.Action.updateSelectedIndex)) {
+                    ForEach(months.indices, id: \.self) { index in
+                        MonthView(store: store, month: months[index])
+                            .tag(index)
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height)
                 }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 10)
-                .background(Color(.systemBackground))
-                .cornerRadius(8)
-                
-                Button {
-                    viewStore.send(.resetMonth)
-                } label: {
-                    Text(viewStore.events.selectedMonthReadable)
-                        .font(.system(size: 16, weight: .semibold, design: .default))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 10)
-                        .background(Color(.systemBackground))
-                        .cornerRadius(8)
-                }
-                
-                Button {
-                    viewStore.send(.nextMonth)
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 16, weight: .semibold, design: .default))
-                }
-                .padding(8)
-                .background(Color(.systemBackground))
-                .cornerRadius(8)
-            }
-            .padding(.vertical)
-            
-            ForEach(viewStore.events.months, id: \.self) { month in
-                MonthView(store: store, month: month)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .tabViewStyle(
+                    PageTabViewStyle(indexDisplayMode: .never)
+                )
+                .animation(.easeInOut, value: viewStore.selectedIndex)
+                .transition(.slide)
             }
         }
     }

@@ -12,18 +12,10 @@ struct MainView: View {
 
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            TabView {
-                HomeView(store: Main.store.home)
-                    .tabItem {
-                        Image(systemName: "house.fill")
-                        Text("Home")
-                    }
-
-                SettingsView(store: Main.store.settings)
-                    .tabItem {
-                        Image(systemName: "gear")
-                        Text("Settings")
-                    }
+            HomeView(store: Main.store.home)
+            .onAppear {
+                viewStore.send(.events(.fetchEvents))
+                viewStore.send(.events(.fetchCalendars))
             }
         }
     }

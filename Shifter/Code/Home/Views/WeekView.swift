@@ -24,13 +24,13 @@ struct WeekView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            HStack {
+            HStack(spacing: 4) {
                 ForEach(days, id: \.self) { date in
                     HStack {
                         if calendar.isDate(week, equalTo: date, toGranularity: .month) {
                             DayView(date: date, store: store)
                         } else {
-                            DayView(date: date, store: store).hidden()
+                            DayView(date: date, store: store).opacity(0.2)
                         }
                     }
                 }
