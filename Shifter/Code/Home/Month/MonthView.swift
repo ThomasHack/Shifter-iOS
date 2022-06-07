@@ -9,23 +9,12 @@ import ComposableArchitecture
 import SwiftUI
 
 struct MonthView: View {
-    @Environment(\.calendar) var calendar
-
-    var store: Store<Home.HomeFeatureState, Home.Action>
-    var month: Date
-    
-    var weeks: [Date] {
-        guard let monthInterval = calendar.dateInterval(of: .month, for: month) else { return [] }
-        return calendar.generateDates(
-            inside: monthInterval,
-            matching: DateComponents(hour: 0, minute: 0, second: 0, weekday: calendar.firstWeekday)
-        )
-    }
+    var store: Store<Month.State, Month.Action>
 
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Text(DateFormatter.month.string(from: month))
+                Text(DateFormatter.month.string(from: viewStore.month))
                     .font(.system(size: 24, weight: .bold, design: .default))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 8)
@@ -33,17 +22,21 @@ struct MonthView: View {
                 
                 HStack{
                     ForEach(0..<7, id: \.self) {index in
-                        Text(viewStore.events.localizedWeekdays[index].uppercased())
+                        Text(viewStore.localizedWeekdays[index].uppercased())
                             .font(.system(size: 16, weight: .semibold, design: .default))
                             .frame(maxWidth: .infinity)
                     }
                 }
                 
-                ForEach(weeks, id: \.self) { week in
-                    WeekView(week: week, store: store)
+                ForEach(viewStore.weeks, id: \.self) { week in
+                    let store = Store(initialState: Week.State(events: viewStore.events, week: week), reducer: Week.reducer, environment: Main.initialEnvironment)
+                    WeekView(store: store)
                 }
                 
                 Spacer()
+            }
+            .onAppear {
+                viewStore.send(.fetchEvents)
             }
         }
     }

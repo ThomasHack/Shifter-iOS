@@ -17,6 +17,19 @@ struct CreateShiftView: View {
         NavigationView {
             WithViewStore(self.store) { viewStore in
                 List {
+                    HStack {
+                        Text("Von - Bis")
+                        Spacer()
+                        Picker(selection: .constant(1), label: Text("")) {
+                            Text("1").tag(1)
+                            Text("2").tag(2)
+                        }
+                        Picker(selection: .constant(1), label: Text("")) {
+                            Text("1").tag(1)
+                            Text("2").tag(2)
+                        }
+                    }
+                    
                     TextField("Title", text: viewStore.binding(get: \.title, send: CreateShift.Action.updateTitle))
                         .disableAutocorrection(true)
 

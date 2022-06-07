@@ -13,12 +13,6 @@ enum Events {
         var calendar = Calendar.current
         var calendars: [EKCalendar] = []
         var events: [EKEvent] = []
-        
-        var localizedWeekdays: [String] {
-            let weekDays = Calendar.current.shortWeekdaySymbols
-            let sortedWeekDays = Array(weekDays[Calendar.current.firstWeekday - 1 ..< Calendar.current.shortWeekdaySymbols.count] + weekDays[0 ..< Calendar.current.firstWeekday - 1])
-            return sortedWeekDays
-        }
 
         var selectedMonth: Date = Date()
         var selectedMonthReadable: String {
@@ -71,8 +65,14 @@ enum Events {
                 .catchToEffect()
                 .map(Action.requestAccessResponse)
 
-        case .requestAccessResponse:
-            return Effect(value: .fetchCalendars)
+        case .requestAccessResponse(let result):
+            switch result {
+            case .success:
+                return Effect(value: .fetchCalendars)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            return .none
 
         case .getAuthorizationStatus:
             return environment.eventsManager.getStatus()
@@ -83,10 +83,20 @@ enum Events {
         case .getAuthorizationStatusResponse(let result):
             switch result {
             case .success:
-                print("getAuthorizationStatus: success")
+                return Effect(value: .fetchCalendars)
             case .failure(let error):
-                print(error.localizedDescription)
-                return Effect(value: .requestAccess)
+                switch error {
+                case .denied:
+                    print("denied")
+                case .noAccess:
+                    print("no access")
+                case .notDetermined:
+                    return Effect(value: .requestAccess)
+                case .restricted:
+                    print("restricted")
+                case .unknown:
+                    print("unknown")
+                }
             }
 
         case .fetchCalendars:

@@ -33,7 +33,9 @@
 		5286830D27183B65009E7794 /* ShiftTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5286830C27183B65009E7794 /* ShiftTemplate.swift */; };
 		5286831027183B73009E7794 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5286830F27183B73009E7794 /* Time.swift */; };
 		5286831227183B93009E7794 /* EventsManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5286831127183B93009E7794 /* EventsManagerError.swift */; };
-		5286831427183BAF009E7794 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5286831327183BAF009E7794 /* Day.swift */; };
+		52C401702812DBCB00753C8F /* Month.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C4016F2812DBCB00753C8F /* Month.swift */; };
+		52C401732812DEC700753C8F /* Week.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C401722812DE1900753C8F /* Week.swift */; };
+		52C401762812DF1B00753C8F /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C401752812DF1600753C8F /* Day.swift */; };
 		65FA1E26270459E600A085F4 /* CreateShift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FA1E25270459E600A085F4 /* CreateShift.swift */; };
 		65FA1E28270459F200A085F4 /* CreateShiftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FA1E27270459F200A085F4 /* CreateShiftView.swift */; };
 /* End PBXBuildFile section */
@@ -66,7 +68,9 @@
 		5286830C27183B65009E7794 /* ShiftTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShiftTemplate.swift; sourceTree = "<group>"; };
 		5286830F27183B73009E7794 /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		5286831127183B93009E7794 /* EventsManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsManagerError.swift; sourceTree = "<group>"; };
-		5286831327183BAF009E7794 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		52C4016F2812DBCB00753C8F /* Month.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Month.swift; sourceTree = "<group>"; };
+		52C401722812DE1900753C8F /* Week.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Week.swift; sourceTree = "<group>"; };
+		52C401752812DF1600753C8F /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
 		65FA1E25270459E600A085F4 /* CreateShift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShift.swift; sourceTree = "<group>"; };
 		65FA1E27270459F200A085F4 /* CreateShiftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShiftView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,9 +91,6 @@
 			isa = PBXGroup;
 			children = (
 				52198C9B281006B300A6460B /* CalendarView.swift */,
-				52198CA12810097D00A6460B /* DayView.swift */,
-				52198C9D2810096A00A6460B /* WeekView.swift */,
-				52198C9F2810097400A6460B /* MonthView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -174,6 +175,9 @@
 		5274778726FC68D000A2D32D /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				52C401742812DF1200753C8F /* Day */,
+				52C401712812DE1400753C8F /* Week */,
+				52C4016E2812DBC400753C8F /* Month */,
 				52198C98280FF0C400A6460B /* Views */,
 				5274778926FC690800A2D32D /* Home.swift */,
 				5234CB232715DF3600789CC1 /* Home+HomeFeature.swift */,
@@ -218,9 +222,35 @@
 			children = (
 				5286830C27183B65009E7794 /* ShiftTemplate.swift */,
 				5286830F27183B73009E7794 /* Time.swift */,
-				5286831327183BAF009E7794 /* Day.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		52C4016E2812DBC400753C8F /* Month */ = {
+			isa = PBXGroup;
+			children = (
+				52C4016F2812DBCB00753C8F /* Month.swift */,
+				52198C9F2810097400A6460B /* MonthView.swift */,
+			);
+			path = Month;
+			sourceTree = "<group>";
+		};
+		52C401712812DE1400753C8F /* Week */ = {
+			isa = PBXGroup;
+			children = (
+				52C401722812DE1900753C8F /* Week.swift */,
+				52198C9D2810096A00A6460B /* WeekView.swift */,
+			);
+			path = Week;
+			sourceTree = "<group>";
+		};
+		52C401742812DF1200753C8F /* Day */ = {
+			isa = PBXGroup;
+			children = (
+				52C401752812DF1600753C8F /* Day.swift */,
+				52198CA12810097D00A6460B /* DayView.swift */,
+			);
+			path = Day;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,6 +338,7 @@
 				52641ABF26FC87E5003C7E6A /* EventsManager.swift in Sources */,
 				52198C9C281006B300A6460B /* CalendarView.swift in Sources */,
 				5274779026FC694900A2D32D /* SettingsView.swift in Sources */,
+				52C401732812DEC700753C8F /* Week.swift in Sources */,
 				52198CA6281009C800A6460B /* Calendar.swift in Sources */,
 				5286831027183B73009E7794 /* Time.swift in Sources */,
 				5274778E26FC693F00A2D32D /* Settings.swift in Sources */,
@@ -318,12 +349,13 @@
 				5274778C26FC691C00A2D32D /* HomeView.swift in Sources */,
 				5286831227183B93009E7794 /* EventsManagerError.swift in Sources */,
 				52198C9E2810096A00A6460B /* WeekView.swift in Sources */,
+				52C401762812DF1B00753C8F /* Day.swift in Sources */,
 				5234CB242715DF3600789CC1 /* Home+HomeFeature.swift in Sources */,
 				52641AC226FCA293003C7E6A /* Date.swift in Sources */,
 				52198CA02810097400A6460B /* MonthView.swift in Sources */,
+				52C401702812DBCB00753C8F /* Month.swift in Sources */,
 				65FA1E28270459F200A085F4 /* CreateShiftView.swift in Sources */,
 				65FA1E26270459E600A085F4 /* CreateShift.swift in Sources */,
-				5286831427183BAF009E7794 /* Day.swift in Sources */,
 				5274777626FC666200A2D32D /* ShifterApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

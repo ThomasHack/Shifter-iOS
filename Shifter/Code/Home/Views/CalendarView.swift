@@ -28,21 +28,19 @@ struct CalendarView: View {
     
     var body: some View {
         WithViewStore(store) { viewStore in            
-            GeometryReader { geometry in
-                TabView(selection: viewStore.binding(get: \.selectedIndex, send: Home.Action.updateSelectedIndex)) {
-                    ForEach(months.indices, id: \.self) { index in
-                        MonthView(store: store, month: months[index])
-                            .tag(index)
-                    }
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+            TabView(selection: viewStore.binding(get: \.selectedIndex, send: Home.Action.updateSelectedIndex)) {
+                ForEach(months.indices, id: \.self) { index in
+                    let store = Store(initialState: Month.State(month: months[index]),
+                                      reducer: Month.reducer,
+                                      environment: Main.initialEnvironment)
+                    MonthView(store: store)
                 }
-                .frame(width: geometry.size.width, height: geometry.size.height)
-                .tabViewStyle(
-                    PageTabViewStyle(indexDisplayMode: .never)
-                )
-                .animation(.easeInOut, value: viewStore.selectedIndex)
-                .transition(.slide)
             }
+            .tabViewStyle(
+                PageTabViewStyle(indexDisplayMode: .never)
+            )
+            .animation(.easeIn, value: viewStore.selectedIndex)
+            .transition(.slide)
         }
     }
 }

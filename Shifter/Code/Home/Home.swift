@@ -20,6 +20,7 @@ enum Home {
 
     enum Action {
         case fetchEvents
+        case fetchEventsForMonth(Date)
         case previousMonth
         case nextMonth
         case currentMonth
@@ -42,6 +43,8 @@ enum Home {
                 if let calendarId = state.shared.calendarId {
                     return Effect(value: .events(.fetchEventsForCalendar(calendarId)))
                 }
+                return Effect(value: .events(.fetchEvents))
+            case .fetchEventsForMonth(let date):
                 return Effect(value: .events(.fetchEvents))
             case .previousMonth:
                 state.selectedIndex -= 1

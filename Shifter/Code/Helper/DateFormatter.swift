@@ -8,6 +8,12 @@
 import Foundation
 
 extension DateFormatter {
+    static var day: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd"
+        return formatter
+    }
+    
     static var month: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM"

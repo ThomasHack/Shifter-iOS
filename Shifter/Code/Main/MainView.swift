@@ -15,8 +15,6 @@ struct MainView: View {
             HomeView(store: Main.store.home)
             .onAppear {
                 viewStore.send(.events(.getAuthorizationStatus))
-                viewStore.send(.events(.fetchEvents))
-                viewStore.send(.events(.fetchCalendars))
             }
         }
     }
